@@ -18,9 +18,11 @@ class TransactionsManager
      * @return
      */
     function update($bank){
-        $transactions=$this->apiManager->bank($bank)->getTransactions();
+        $bankApi=$this->apiManager->bank($bank);
+        $transactions=$bankApi->getTransactions();
+        $bankApi->setHasNewTransaction(false);
         foreach ($transactions as $transaction){
-            BankTransaction::query()->updateOrCreate([
+            $transaction=BankTransaction::query()->updateOrCreate([
                 'bank'=>$bank,
                 'tid'=>$transaction->id,
             ],[
@@ -32,7 +34,12 @@ class TransactionsManager
                 'order_id'=>absint($transaction->order_id),
                 'received_at'=>$transaction->date?:ws_now(),
             ]);
+            if($transaction->wasRecentlyCreated){
+                $bankApi->gotNewTransaction($transaction);
+                $bankApi->setHasNewTransaction(true);
+            }
         }
+        $bankApi->transactionsUpdated();
         return $transactions;
     }
 }

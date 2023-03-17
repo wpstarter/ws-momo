@@ -11,7 +11,10 @@
     "ext-openssl": "*",
     "ext-json": "*",
     "wpstarter/framework": "^1.2",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "phpseclib/phpseclib": "~3.0",
+    "php-curl-class/php-curl-class": "^9.14",
+    "ext-curl": "*"
   },
   "require-dev": {
     "filp/whoops": "^2.14.5"

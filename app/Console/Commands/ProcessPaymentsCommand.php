@@ -25,11 +25,8 @@ class ProcessPaymentsCommand extends Command
         $this->line('Found: '.$query->count().' transactions');
         $query->each(function(BankTransaction $transaction){
             if($transaction->order_id){
-                if($transaction->prefix===Payment::getInvoicePrefix()){
+                if($transaction->prefix==='invoice'){
                     $this->processOrder($transaction);
-                }
-                if($transaction->prefix===Payment::getAddFundsPrefix()){
-                    $this->processAccountFunds($transaction);
                 }
             }
         });
@@ -48,17 +45,6 @@ class ProcessPaymentsCommand extends Command
                 $transaction->update(['status'=>'not_enough_amount']);
                 $order->add_order_note('Chưa đủ tiền. Số tiền nhận được: '.$transaction->amount. 'Cần thanh toán: '.$invoice->getAmount());
             }
-        }
-    }
-    function processAccountFunds(BankTransaction $transaction){
-        $user=User::find($transaction->order_id);
-        $transaction->notified_at=Carbon::now();
-        if($user){
-            $amount=round($transaction->amount/Payment::getAddFundsRate());
-            $user->addTransaction($amount,'Add funds via bank transfer '.$transaction->amount.'(VND)');
-            $transaction->update(['status'=>'ok']);
-        }else{
-            $transaction->update(['status'=>'user_not_found']);
         }
     }
 }

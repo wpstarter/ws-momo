@@ -8,9 +8,20 @@ abstract class BankApi
 {
     protected $config;
     protected $prefixes;
+    protected $hasNewTransaction=false;
     public function __construct($config)
     {
         $this->config=$config;
+    }
+    public function setHasNewTransaction($status=true){
+        $this->hasNewTransaction=$status;
+        return $this;
+    }
+    public function gotNewTransaction($transaction){
+
+    }
+    public function transactionsUpdated(){
+
     }
     protected function getPrefixes(){
         if(!$this->prefixes){

@@ -4,6 +4,7 @@ namespace App\Woo\Payment;
 
 use App\Banking\Support\Invoice;
 use App\Banking\Support\Payment;
+use WC_Order;
 
 abstract class DirectBankingPaymentGateway extends \WC_Payment_Gateway
 {
@@ -186,7 +187,8 @@ abstract class DirectBankingPaymentGateway extends \WC_Payment_Gateway
     }
     function payment_fields(){
         $description = $this->get_description();
-        $description=str_replace('{{total}}',$this->get_order_total()*Payment::getRate(),$description);
+        $invoice=Invoice::forOrder(absint( get_query_var( 'order-pay' ) ));
+        $description=str_replace('{{total}}',$invoice->getFormattedAmount(),$description);
         if ( $description ) {
             echo wpautop( wptexturize( $description ) ); // @codingStandardsIgnoreLine.
         }

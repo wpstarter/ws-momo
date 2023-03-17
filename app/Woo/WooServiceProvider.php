@@ -2,9 +2,8 @@
 
 namespace App\Woo;
 
-use App\Woo\Account\AccountServiceProvider;
+use App\Woo\Payment\CheckOrderStatus;
 use App\Woo\Payment\PaymentGatewaysManager;
-use App\Woo\Payment\ShowVnPrice;
 use WpStarter\Support\ServiceProvider;
 
 class WooServiceProvider extends ServiceProvider
@@ -12,7 +11,6 @@ class WooServiceProvider extends ServiceProvider
     function register()
     {
         $this->app->singleton(PaymentGatewaysManager::class);
-        $this->app->register(AccountServiceProvider::class);
     }
 
     function boot(){
@@ -20,6 +18,6 @@ class WooServiceProvider extends ServiceProvider
             return ;
         }
         $this->app->make(PaymentGatewaysManager::class);
-        $this->app->make(ShowVnPrice::class);
+        $this->app->make(CheckOrderStatus::class);
     }
 }

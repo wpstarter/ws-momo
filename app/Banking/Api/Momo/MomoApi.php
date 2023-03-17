@@ -22,10 +22,12 @@ class MomoApi
         'TRANSACTION_HISTORY_LIST'    => 'https://api.momo.vn/sync/transhis/browse',
         'TRANSACTION_HISTORY_DETAIL'    => 'https://api.momo.vn/sync/transhis/details',
     );
-
-    public function __construct($phone)
+    public static function make($phone=null){
+        return new static($phone);
+    }
+    public function __construct($phone=null)
     {
-        $this->config=Config::load($phone);
+        $this->config=Config::load();
         $this->app=new App();
         $this->init($phone);
     }
@@ -39,7 +41,7 @@ class MomoApi
 
     public function init($phone)
     {
-        if($this->config->phone !== $phone){
+        if($phone && $this->config->phone !== $phone){
             $this->config->clear();
             $this->loadUserData($phone);
         }
@@ -83,10 +85,6 @@ class MomoApi
         return $result;
 
     }
-
-
-
-
 
     public function setOTP($code)
     {
@@ -144,16 +142,34 @@ class MomoApi
         $this->config->auth_token_lifetime=$this->session_lifetime;
         return $this->config;
     }
-
-    function refreshAccessToken(){
-        dd($this->GENERATE_TOKEN_AUTH_MSG());
+    function reloadUserData($force=false){
+        $tokenLifetime=time()-$this->config->logged_in_at;
+        if($force || $tokenLifetime>$this->config->auth_token_lifetime) {
+            $this->loginUser();
+        }
+        return false;
     }
+    function refreshAccessToken($force=false){
+        $tokenLifetime=time()-$this->config->logged_in_at;
+        if($force || $tokenLifetime>$this->config->auth_token_lifetime) {
+            $response = $this->REFRESH_TOKEN_MSG();
+            if ($accessToken = ws_data_get($response, 'momoMsg.accessToken')) {
+                $this->config->auth_token = $accessToken;
+                return true;
+            }
+            $this->config->logged_in_at=time();
+        }
+        return false;
+    }
+
+
 
 
 
 
     public function getNotifications($from=null, $to=null, $limit=200)
     {
+        $this->reloadUserData();
         if(!$to){
             $to=Carbon::now();
         }

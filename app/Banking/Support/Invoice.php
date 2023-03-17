@@ -14,7 +14,7 @@ class Invoice
         $this->prefix=Payment::getInvoicePrefix();
     }
     function getFormattedAmount(){
-        return '<span>'.number_format($this->getAmount(),0,",",".").' <sup>vnđ</sup></span>';
+        return '<span>'.number_format($this->getAmount(),0,",",".").' <sup>'.get_woocommerce_currency_symbol('VND').'</sup></span>';
     }
     function getTotal(){
         if(is_null($this->order)){
@@ -31,7 +31,13 @@ class Invoice
     public static function forCart(){
         return new static();
     }
-    public static function forOrder(\WC_Order $order){
+    public static function forOrder($order){
+        if(!$order instanceof \WC_Order) {
+            $order=wc_get_order($order);
+            if(!$order){
+                return static::forCart();
+            }
+        }
         return new static($order);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Banking\Api\Momo;
 
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Crypt\RSA;
+
 trait ApiMsg
 {
     protected function USER_LOGIN_MSG()
@@ -267,8 +270,7 @@ trait ApiMsg
 
         $body = curl_exec($curl);
         if(curl_errno($curl) != 0){
-
-            die ("Curl failed: ". curl_error($curl));
+            return null;
         }
         if(is_object(json_decode($body))){
             return json_decode($body,true);
@@ -276,6 +278,7 @@ trait ApiMsg
         if($body){
             return json_decode($this->encryptDecrypt($body,$this->app->token,'DECRYPT'),true);
         }
+        return null;
 
     }
     protected function formatHeader($headers){
@@ -346,9 +349,8 @@ trait ApiMsg
     }
 
     function encryptAppKeyUsingPublicKey($public_key) {
-        $rsa = new \phpseclib\Crypt\RSA();
-        $rsa->setEncryptionMode(\phpseclib\Crypt\RSA::ENCRYPTION_PKCS1);
-        $rsa->loadKey($public_key);
+        $rsa=PublicKeyLoader::load($public_key);
+        $rsa=$rsa->withPadding(RSA::ENCRYPTION_PKCS1)->withHash('sha1')->withMGFHash('sha1');
         return base64_encode($rsa->encrypt($this->app->token));
     }
 }

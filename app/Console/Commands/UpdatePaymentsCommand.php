@@ -11,8 +11,8 @@ class UpdatePaymentsCommand extends Command
 {
     protected $signature='payments:update';
     function handle(TransactionsManager $transactionsManager){
-        if(Cache::lock('payments:update',6)->get()) {
-            $transactions=$transactionsManager->update('vp_bank');
+        if(Cache::lock('payments:update',10)->get()) {
+            $transactions=$transactionsManager->update('momo');
             ProcessPayments::dispatch();
             foreach ($transactions as $transaction){
                 if(!$transaction->order_id){
