@@ -51,3 +51,12 @@ Kết nối momo:
 ```
 php artisan momo connect
 ```
+
+## Cài cronjob
+
+Để hệ thống tự động update order ngay cả khi người dùng tắt trình duyệt thì cần cài cronjob như sau
+
+```
+* * * * * cd /path-to-ws-momo && php artisan schedule:run >> /dev/null 2>&1
+```
+
