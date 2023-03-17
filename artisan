@@ -1,0 +1,57 @@
+<?php
+define('WS_CLI',true);
+if(file_exists(__DIR__.'/wp-load.php')){
+   //Binary in wp root
+   require __DIR__.'/wp-load.php';
+}else{
+    //Binary in plugin
+    require __DIR__ . '/bootstrap/autoload-cli.php';
+}
+$kernel=null;
+if(class_exists('WordpressStarter')){//Plugin activated
+    $kernel=WordpressStarter::make()->kernel();
+}else{//Plugin not activated
+    if(file_exists(__DIR__ . '/bootstrap/autoload.php')){
+        require __DIR__ . '/bootstrap/autoload.php';
+        $app = require_once __DIR__.'/bootstrap/app.php';
+        $kernel = $app->make(WpStarter\Contracts\Console\Kernel::class);
+    }
+}
+if(empty($kernel)){
+    if(defined('ABSPATH')){
+        echo "\033[33mThe plugin is not activated\033[0m".PHP_EOL;
+    }else{
+        echo "\033[33mWordpress not found, please install WpStarter inside WordPress directory \033[0m".PHP_EOL;
+    }
+    return ;
+}
+/*
+|--------------------------------------------------------------------------
+| Run The Artisan Application
+|--------------------------------------------------------------------------
+|
+| When we run the console application, the current CLI command will be
+| executed in this console and the response sent back to a terminal
+| or another output device for the developers. Here goes nothing!
+|
+*/
+
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
+
+/*
+|--------------------------------------------------------------------------
+| Shutdown The Application
+|--------------------------------------------------------------------------
+|
+| Once Artisan has finished running, we will fire off the shutdown events
+| so that any final work may be done by the application before we shut
+| down the process. This is the last thing to happen to the request.
+|
+*/
+
+$kernel->terminate($input, $status);
+
+exit($status);
