@@ -44,8 +44,9 @@ if(file_exists(ABSPATH.'/ws-momo/main.php')){
 Hãy di chuyển vào thư mục `ws-momo` và chạy các lệnh sau để cài đặt
 
 ```shell
-php -r "file_exists('.env') || copy('.env.example', '.env');"
 composer install
+php -r "file_exists('.env') || copy('.env.example', '.env');"
+php artisan key:generate --ansi
 php artisan migrate
 ```
 
