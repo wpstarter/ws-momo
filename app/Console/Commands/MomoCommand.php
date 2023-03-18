@@ -22,6 +22,13 @@ class MomoCommand extends Command
             $this->info('Thông tin momo như sau');
             dd($momo->config()->toArray());
         }
+        if($action==='export'){
+            $this->info('Hãy copy chuỗi sau để nhập vào 1 trang wordpress khác nha');
+            $data=maybe_serialize($momo->config()->getAttributes());
+            $data=base64_encode($data);
+            $this->line($data);
+            return ;
+        }
         if($action==='login' || $action==='connect') {
             if(!$value){
                 $value=$this->ask('Nhập số điện thoại');
