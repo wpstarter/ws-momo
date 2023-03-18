@@ -45,6 +45,7 @@ Hãy di chuyển vào thư mục `ws-momo` và chạy các lệnh sau để cài
 
 ```shell
 composer install
+php -r "file_exists('.env') || copy('.env.example', '.env');"
 php artisan migrate
 ```
 
