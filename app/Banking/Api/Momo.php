@@ -35,7 +35,7 @@ class Momo extends BankApi
             $transaction->bank='momo';
             $transaction->id=$momo['tranId'];
             $transaction->amount=$extra['amount'];
-            $transaction->date=Carbon::createFromTimestamp($momo['updateTime']);
+            $transaction->date=Carbon::createFromTimestamp($momo['updateTime']/1000);
             $transaction->content_raw=$momo['caption'].'('.($extra['partnerId']??'').'). '.$momo['body'];
             $transaction->content=$extra['comment'];
             $transaction->prefix='';
