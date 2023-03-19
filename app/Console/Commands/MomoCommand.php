@@ -22,6 +22,10 @@ class MomoCommand extends Command
             $this->info('Thông tin momo như sau');
             dd($momo->config()->toArray());
         }
+        if($action=='history'){
+            $this->info('Lịch sử giao dịch gần đây');
+            dd($momo->getNotifications());
+        }
         if($action==='export'){
             $this->info('Hãy copy chuỗi sau để nhập vào 1 trang wordpress khác nha');
             $data=maybe_serialize($momo->config()->getAttributes());
