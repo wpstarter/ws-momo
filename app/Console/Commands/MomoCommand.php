@@ -42,7 +42,7 @@ class MomoCommand extends Command
             if($result['errorCode']==0) {
                 $this->line('Hãy kiểm tra điện thoại để lấy mã OTP');
             }else{
-                $this->error($result['errorDesc']);
+                $this->error("[{$result['errorCode']}] ".$result['errorDesc']);
                 return ;
             }
             $otp=$this->ask("Nhập mã OTP");
@@ -54,7 +54,7 @@ class MomoCommand extends Command
             if($result['errorCode']==0) {
                 $this->line('Đã nhập OTP: '.$otp);
             }else{
-                $this->error($result['errorDesc']);
+                $this->error("[{$result['errorCode']}] ".$result['errorDesc']);
                 return ;
             }
             $pass=$this->ask("Nhập mật khẩu momo của bạn");

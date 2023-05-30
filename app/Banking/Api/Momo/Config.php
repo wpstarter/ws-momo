@@ -2,6 +2,7 @@
 
 namespace App\Banking\Api\Momo;
 
+use WpStarter\Support\Facades\Cache;
 use WpStarter\Support\Fluent;
 
 /**
@@ -50,14 +51,23 @@ class Config extends Fluent
     }
 
     public static function load(){
-        $configs=get_option(static::OPTION_KEY);
+        if(function_exists('get_option')) {
+            $configs = get_option(static::OPTION_KEY);
+        }else{
+            $configs = Cache::get(static::OPTION_KEY,[]);
+        }
         if(!is_array($configs)){
             $configs=[];
         }
         return new static($configs);
     }
     public function save(){
-        update_option('momo',$this->attributes,false);
+        if(function_exists('update_option')){
+            update_option('momo',$this->attributes,false);
+        }else{
+            Cache::forever(static::OPTION_KEY,$this->attributes);
+        }
+
     }
     public function clear(){
         $this->attributes=[];

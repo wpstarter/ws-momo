@@ -96,6 +96,9 @@ class MomoApi
                 "errorDesc"=> "Đã xảy ra lỗi máy chủ xin vui lòng thử lại",
             );
         }
+        if(!empty($result['errorCode'])){
+            return $result;
+        }
         $this->config->setupKey=$result["extra"]["setupKey"];
         $this->config->setupKeyDecrypt=$this->decryptSetupKey($result["extra"]["setupKey"]);
 
@@ -193,8 +196,7 @@ class MomoApi
     protected function getHeaders($msgType){
         if($msgType==='REG_DEVICE_MSG'){
             return [
-                "authorization: Bearer",
-                "msgtype: REG_DEVICE_MSG",
+                "MsgType: REG_DEVICE_MSG",
                 "Accept: application/json",
                 "Content-Type: application/json",
             ];
@@ -203,10 +205,10 @@ class MomoApi
             'agent_id'=>$this->config->agent_id,
             "user_phone"=>$this->config->phone,
             "sessionkey"=>$this->config->session_key,
-            "authorization"=>"Bearer {$this->config->auth_token}",
-            "msgtype"=>$msgType,
+            "Authorization"=>"Bearer {$this->config->auth_token}",
+            "MsgType"=>$msgType,
             "user_id"=>$this->config->phone,
-            "User-Agent"=>"okhttp/3.14.17",
+            "User-Agent"=>"okhttp/3.12.7-SNAPSHOT",
             "app_version"=>$this->app->appVer,
             "app_code"=>$this->app->appCode,
             "device_os"=>$this->config->device_os,

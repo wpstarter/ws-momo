@@ -172,7 +172,7 @@ trait ApiMsg
                     'rkey' => $this->config->rkey,
                     'IDFA' => '',
                     'TOKEN' => $this->config->token,
-                    'ONESIGNAL_TOKEN' => $this->config->token,
+                    'ONESIGNAL_TOKEN' => '',
                     'SIMULATOR' => false,
                     'SECUREID' => '',
                     'MODELID' => $this->config->model_id,
@@ -197,18 +197,6 @@ trait ApiMsg
         $data = array (
             'user' => $this->config->phone,
             'msgType'   => 'REG_DEVICE_MSG',
-            'cmdId'     => $microtime. '000000',
-            'lang'      => 'vi',
-            'time'      => $microtime,
-            'channel'   => 'APP',
-            'appVer'    => $this->app->appVer,
-            'appCode'   => $this->app->appCode,
-            'deviceOS'  => $this->config->device_os,
-            // 'buildNumber' => 0,
-            // 'appId'     => 'vn.momo.platform',
-            'result'    => true,
-            'errorCode' => 0,
-            'errorDesc' => '',
             'momoMsg'   =>
                 array (
                     '_class' => 'mservice.backend.entity.msg.RegDeviceMsg',
@@ -223,18 +211,33 @@ trait ApiMsg
                     'csp' => '',
                     'icc' => '',
                     'mcc' => '',
-                    'device_os' => 'Android',
+                    'mnc' =>'',
+                    'device_os' => $this->config->device_os,
                     'secure_id' => $this->config->secure_id,
                 ),
             'extra' =>
                 array (
                     'ohash'     => $this->config->ohash,
-                    'AAID'      => '',
                     'IDFA'      => '',
-                    'TOKEN'     => '',
-                    'SIMULATOR' => 'false',
+                    'SIMULATOR' => false,
+                    'TOKEN'     => $this->config->token,
+                    'ONESIGNAL_TOKEN'=>'',
                     'SECUREID'  => $this->config->secure_id,
+                    'MODELID'=>'',
+                    'DEVICE_TOKEN'=>$this->config->device_token,
+                    'isAllowNoti'=>false,
                 ),
+            'appVer'    => $this->app->appVer,
+            'appCode'   => $this->app->appCode,
+            'lang'      => 'vi',
+            'deviceOS'  => $this->config->device_os,
+            'channel'   => 'APP',
+            'buildNumber' => 0,
+            'appId'     => 'vn.momo.platform',
+            'cmdId'     => $microtime. '000000',
+            'time'      => $microtime,
+
+
         );
         return $this->CURL("REG_DEVICE_MSG",$header,$data);
 
