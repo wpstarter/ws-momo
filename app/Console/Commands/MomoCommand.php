@@ -39,11 +39,16 @@ class MomoCommand extends Command
             }
             $momo=new MomoApi($value);
             $result=$momo->sendOTP();
-            if($result['errorCode']==0) {
-                $this->line('Hãy kiểm tra điện thoại để lấy mã OTP');
+            if($result) {
+                if ($result['errorCode'] == 0) {
+                    $this->line('Hãy kiểm tra điện thoại để lấy mã OTP');
+                } else {
+                    $this->error("[{$result['errorCode']}] " . $result['errorDesc']);
+                    return;
+                }
             }else{
-                $this->error("[{$result['errorCode']}] ".$result['errorDesc']);
-                return ;
+                $this->error('Lỗi không thể gửi OTP');
+                return;
             }
             $otp=$this->ask("Nhập mã OTP");
             if(!$otp){

@@ -14,12 +14,12 @@ class Device
     public static function random(){
         $device=new static();
         $device->imei='A1625736-B67D-4921-B0AA-9A5C64706BCE';
-        $device->name='iPhone 6s';
-        $device->hardware='iPhone';
-        $device->manufacture='Apple';
+        $device->name='Samsung 16s';
+        $device->hardware='Samsung';
+        $device->manufacture='Samsung';
         $device->model_id='3579b72290f859c42a61fc473b59b6865e0a9533c07fed9cbb5f0df284fe008d';
         $device->token='4147F3BBDC0316F8B1E48F8954D0E01045BE89F2E9BF9A7BA0C215C9E7EB891C';
-        $device->os='ios';
+        $device->os='android';
         return $device;
     }
     function getSecureId($length = 17)

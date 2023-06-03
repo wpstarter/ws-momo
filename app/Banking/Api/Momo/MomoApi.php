@@ -15,7 +15,7 @@ class MomoApi
     protected $URLAction = array(
         "CHECK_USER_BE_MSG" => "https://api.momo.vn/backend/auth-app/public/CHECK_USER_BE_MSG",// Init user session
         "SEND_OTP_MSG"      => "https://api.momo.vn/backend/otp-app/public/",//Send OTP
-        "REG_DEVICE_MSG"    => "https://api.momo.vn/backend/otp-app/public/REG_DEVICE_MSG",// Register device
+        "REG_DEVICE_MSG"    => "https://api.momo.vn/backend/otp-app/public/",// Register device
         "USER_LOGIN_MSG"     => "https://owa.momo.vn/public/login",// Login
         "CLOUD_USER_NOTI" => "https://m.mservice.io/hydra/v2/user/noti",// Get notifications
         'REFRESH_TOKEN_MSG'    => 'https://api.momo.vn/auth/fast-login/refresh-token',//Refresh token
@@ -186,6 +186,9 @@ class MomoApi
             $from=Carbon::parse($from);
         }
         $result=$this->CLOUD_USER_NOTI($from->timestamp,$to->timestamp,'',$limit);
+        if(!Arr::get($result,'success')){
+            throw new MomoApiException("Lỗi khi lấy lịch sử giao dịch");
+        }
         $notifications=Arr::get($result,'message.data.notifications',[]);
         return $notifications;
 
